@@ -3,7 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import morgan from 'morgan'
-
+import routes  from './routes'
 dotenv.config()
 const app = express()
 
@@ -27,10 +27,7 @@ mongoose.connect(URI, {
     console.log('Mongodb connected')
 })
 //Routes
-app.get('/', (req, res)=>{
-    res.json({msg:'Hello DevAT'})
-})
-
+app.use('/api', routes)
 //Start server listening
 const port = process.env.PORT || 5000;
 // lay port default cua moi truong deloy
