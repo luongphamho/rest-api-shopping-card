@@ -1,13 +1,23 @@
 import Products from "../models/productModel"
-
+import { APIfeatures } from "../lib/features";
 const productCtr = {
     getProducts: async (req, res) => {
-        try {
-            const products = await Products.find()
-            return res.status(200).json(products)
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
-        }
+      try {
+        const features = new APIfeatures(Products.find(), req.query)
+        .paginating().sorting().searching().filtering()
+  
+        const result = await Promise.allSettled([
+          features.query,
+          Products.countDocuments() //count number of products.
+        ])
+        
+        const products = result[0].status === 'fulfilled' ? result[0].value : [];
+        const count = result[1].status === 'fulfilled' ? result[1].value : 0;
+  
+        return res.status(200).json({products, count})
+      } catch (err) {
+        return res.status(500).json({msg: err.message})
+      }
     },
     getProduct: async(req, res) => {
         try {

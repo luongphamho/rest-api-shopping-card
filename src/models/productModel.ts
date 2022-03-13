@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-//tam mang loc  
+
 const productSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -25,6 +25,10 @@ const productSchema = new mongoose.Schema({
   timestamps: true
 })
 
+productSchema.index({title: 'text'})
+//danh dau index de tim kiem
 const Products = mongoose.model('Products', productSchema)
-// productSchema se anh xa den Products collection tren mongodb
+
+Products.createIndexes({title: 'text'})
+//danh dau index
 export default Products;
